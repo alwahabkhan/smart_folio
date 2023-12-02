@@ -124,10 +124,10 @@ export default function Signup() {
           className="max-w-[400px] w-full mx-auto bg-gray-900 p-8 px-8 rounded-lg"
           onSubmit={handleSubmit}
         >
-          <h2 className="text-4xl dark:text-white font-bold text-center">
+          <h2 className="text-4xl text-white font-bold text-center">
             Sign Up
           </h2>
-
+    <br/>
           {/* Email input field */}
           <div className="flex flex-col text-gray-400 py-2">
             {/* <label htmlFor="email">Email:</label> */}

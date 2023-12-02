@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import TableRow from "./components/tableRow";
+import { useNavigate } from "react-router-dom";
+let tableItemStyle = {
+  fontSize: "12px", fontWeight: "600", width: '20%'
+}
 const Dashboard = () => {
   const [coverLetters, setCoverLetters] = useState([
     {
@@ -29,8 +33,9 @@ const Dashboard = () => {
       strenth: "21",
     },
   ]);
+  const navigator= useNavigate()
   return (
-    <Container sx={{ marginTop: "40px" }}>
+    <Container sx={{ marginTop: "140px" }}>
       <Box
         sx={{
           display: "flex",
@@ -44,45 +49,51 @@ const Dashboard = () => {
             color: "rgb(55 65 81)",
             borderColor: "rgb(55 65 81)",
           }}
+          onClick={()=>{
+            navigator('/cover-letter')
+          }}
         >
           Create New Cover Letter
         </Button>
       </Box>
-      <Box>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            borderBottom: "1px solid rgba(0,0,0,0.2)",
-            padding: "50px 0px 20px 0px",
-            overflowX:'auto'
-          }}
-        >
-          <Typography sx={{ fontSize: "12px", fontWeight: "600" }}>
-            NAME
-          </Typography>
-          <Typography sx={{ fontSize: "12px", fontWeight: "600" }}>
-            MODIFICATION
-          </Typography>
-          <Typography sx={{ fontSize: "12px", fontWeight: "600" }}>
-            CREATION
-          </Typography>
-          <Typography sx={{ fontSize: "12px", fontWeight: "600" }}>
-            STRENTH
-          </Typography>
-          <Typography sx={{ fontSize: "12px", fontWeight: "600" }}>
-            ACTIONS
-          </Typography>
+      <Box sx={{ overflowX: 'auto' }}>
+        <Box sx={{ minWidth: '1080px' }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              borderBottom: "1px solid rgba(0,0,0,0.2)",
+              padding: "50px 0px 20px 0px",
+            }}
+          >
+            <Typography sx={tableItemStyle}>
+              NAME
+            </Typography>
+            <Typography sx={tableItemStyle}>
+              MODIFICATION
+            </Typography>
+            <Typography sx={tableItemStyle}>
+              CREATION
+            </Typography>
+            <Typography sx={tableItemStyle}>
+              STRENTH
+            </Typography>
+            <Typography sx={{ fontSize: "12px", fontWeight: "600", width: '20%', display: 'flex', justifyContent: 'flex-end' }}>
+              ACTIONS
+            </Typography>
+          </Box>
         </Box>
-        {coverLetters.map((item, index) => (
-          <TableRow
-            key={index}
-            name={item.name}
-            modified={item.modified}
-            created={item.created}
-            strenth={item.strenth}
-          />
-        ))}
+        <Box sx={{ minWidth: '1080px' }}>
+          {coverLetters.map((item, index) => (
+            <TableRow
+              key={index}
+              name={item.name}
+              modified={item.modified}
+              created={item.created}
+              strenth={item.strenth}
+            />
+          ))}
+        </Box>
       </Box>
     </Container>
   );
