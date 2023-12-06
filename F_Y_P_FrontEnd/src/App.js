@@ -9,7 +9,7 @@ function App() {
   return (
     <AppState>
       <Router>
-        {localStorage.getItem('_id') && <Navbar />}
+        {localStorage.getItem('name') && <Navbar />}
         <ToastContainer/>
         <Routes>
           {routes.map((item, index) => <Route exact path={item.route} element={item.component} key={index} />)}

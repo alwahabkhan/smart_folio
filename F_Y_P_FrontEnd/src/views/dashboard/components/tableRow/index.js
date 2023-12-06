@@ -5,19 +5,24 @@ import { Edit, Delete } from '@mui/icons-material';
 let textStyle = {
     fontSize: "12px",
     fontWeight: "600",
-    width: '20%'
+    width: '25%'
 }
 export default function Default(props) {
-    const { name, modified, created, strenth } = props;
+    const { name, modified, created, onEdit, onDelete, onClick } = props;
     return (
         <Box
+            onClick={(e) => {
+                e.stopPropagation();
+                onClick()
+            }
+            }
             sx={{
                 display: "flex",
                 justifyContent: "space-between",
                 borderBottom: "1px solid rgba(0,0,0,0.2)",
                 padding: "10px 0px",
                 alignItems: "center",
-
+                cursor: 'pointer'
             }}
         >
             <Typography sx={textStyle}>
@@ -30,31 +35,18 @@ export default function Default(props) {
                 {created}
             </Typography>
             <Box sx={{
-                fontSize: "12px",
-                fontWeight: "600",
-                width: '20%',
+                width: '25%',
                 display: 'flex',
-                justifyContent: 'left'
+                justifyContent: 'flex-end'
             }}>
-                <Typography
-                    sx={{
-                        fontSize: "12px",
-                        fontWeight: "600",
-                        padding: "10px 20px",
-                        color: "white",
-                        borderRadius: "40px",
-                        backgroundColor: "rgb(0, 153, 255)",
-                    }}
-                >
-                    {strenth}
-                </Typography>
-            </Box>
-            <Box sx={{
-                width: '20%',
-                width: '20%', display: 'flex', justifyContent: 'flex-end'
-            }}>
-                <Delete sx={{ color: 'red', cursor: 'pointer' }} />
-                <Edit sx={{ color: 'blue', cursor: 'pointer' }} />
+                <Delete sx={{ color: 'red', cursor: 'pointer' }} onClick={(e) => {
+                e.stopPropagation();
+                onDelete()
+            }} />
+                <Edit sx={{ color: 'blue', cursor: 'pointer' }} onClick={(e) => {
+                e.stopPropagation();
+                onEdit()
+            }} />
             </Box>
         </Box>
     )

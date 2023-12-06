@@ -15,8 +15,9 @@ export default function AppState(props) {
     topSkills:[],
     kindOfSchool:'',
   })
+  const [letter, setLetter] = useState('')
   return (
-    <AppContext.Provider value={{letterQuestionare, setletterQuestionare}}>
+    <AppContext.Provider value={{letterQuestionare, setletterQuestionare,letter, setLetter}}>
       {props.children}
     </AppContext.Provider>
   )
