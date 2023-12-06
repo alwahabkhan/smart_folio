@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-
+  const navigator = useNavigate()
   const validateEmail = () => {
     if (!email) {
       setEmailError('Email is required');
@@ -24,7 +25,7 @@ export default function Login() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     validateEmail();
@@ -37,7 +38,33 @@ export default function Login() {
         email,
         password,
       };
+      await fetch("http://localhost:5000/user/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        }),
+      })
+        .then((res) => res.json())
+        .then((response) => {
+          if (response.status) {
+            setEmail("");
+            setPassword("");
 
+            
+            console.log(response)
+            localStorage.setItem('_id',response.result._id)
+            localStorage.setItem('name',response.result.fullName)
+            localStorage.setItem('email',response.result.email)
+            localStorage.setItem('phoneNo',response.result.phoneNo)
+            navigator("/");
+          } else {
+            alert(response.message)
+          }
+        });
       // Reset the form fields if needed
       setEmail('');
       setPassword('');

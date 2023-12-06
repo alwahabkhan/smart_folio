@@ -5,14 +5,14 @@ import { Add, Remove } from '@mui/icons-material'
 import appContext from 'appState/appContext'
 
 import { Configuration, OpenAIApi } from 'openai';
+import baseUrl from '../../url'
+import { useNavigate } from 'react-router-dom'
 const configuration = new Configuration({
-    apiKey: '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'
+    apiKey: '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'
 })
 const openai = new OpenAIApi(configuration);
-// const openai = new OpenAI({ apiKey: 'sk-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', dangerouslyAllowBrowser: true });
 export default function Default() {
-    const [response, setResponse] = useState('');
-    const apiKey = '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';
+    const navigator = useNavigate()
     const [strengths, setStrengths] = useState([
         'Collaboration',
         'Critical Thinking',
@@ -67,7 +67,7 @@ export default function Default() {
         },
     ])
     const appState = useContext(appContext)
-    const { letterQuestionare, setletterQuestionare } = appState
+    const { letterQuestionare, setletterQuestionare,letter, setLetter } = appState
     const handleAddStrengths = (index) => {
         setletterQuestionare(prevState => {
             let newState = { ...prevState };
@@ -135,17 +135,9 @@ export default function Default() {
     }
 
     const handleLetterGeneration = async () => {
-        let text = `Write a cover letter for my job i am applying for by using the following details:
-        my strenths are ${letterQuestionare.strengths} and i am applying for ${letterQuestionare.specificJob} and
-        my experience is of ${letterQuestionare.experience} years and my recent job title is ${letterQuestionare.recentJobTitle} 
-        ${letterQuestionare.isInSchool && 'i am currently in school'} ${letterQuestionare.kindOfSchool && `${letterQuestionare.kindOfSchool} 
-        kind of school`}
-        and my working style is ${letterQuestionare.workingStyle.value},  ${letterQuestionare.workingStyle.description} and i am apply for 
-        ${letterQuestionare.jobApplyingFor.position} position and ${letterQuestionare.jobApplyingFor.company} company and my top skills are 
-        ${letterQuestionare.skills}`
         const messages = [{
-            role:'user',
-            content:`my name is ameen butt and my email is ameen@gmail.com and my phone is 33098429 i am writting this 
+            role: 'user',
+            content: `my name is ${localStorage.getItem('name')} and my email is ${localStorage.getItem('email')} and my phone is ${localStorage.getItem('phoneNo')} i am writting this 
             letter to HR. Dont includes addresses neither of mine or recipeint. The company name is ${letterQuestionare.jobApplyingFor.company}.Write a comprehensive cover letter for my job i am applying for by using the following details:
             my strenths are ${letterQuestionare.strengths} and i am applying for ${letterQuestionare.specificJob} and
             my experience is of ${letterQuestionare.experience} years and my recent job title is ${letterQuestionare.recentJobTitle} 
@@ -155,16 +147,14 @@ export default function Default() {
             ${letterQuestionare.jobApplyingFor.position} position and ${letterQuestionare.jobApplyingFor.company} company and my top skills are 
             ${letterQuestionare.skills}`
         }]
-        console.log(messages)
-        const completion = await openai.createChatCompletion({ model: "gpt-3.5-turbo",messages });
-        // const message = completion.data.choices;
+        const completion = await openai.createChatCompletion({ model: "gpt-3.5-turbo", messages });
         let newText = completion.data.choices[0].message.content;
-
-        newText = newText.replace(/\n/g, '<br>');
+        console.log(localStorage.getItem('_id'))
+        console.log(newText)
+        // newText = newText.replace(/\n/g, '<br>');
+        setLetter(newText)
+        navigator('/letter-view')
         
-        console.log(newText);
-        console.log(completion.data.choices[0].message.content);
-        setResponse(newText)
     }
     return (
         <Box sx={{ marginTop: '140px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -401,7 +391,7 @@ export default function Default() {
                 <br /><br /><br />
                 <center><Button variant='contained' onClick={handleLetterGeneration} sx={{ backgroundColor: '#3983fa' }}>Generate Letter</Button></center>
                 <br /><br />
-                <div dangerouslySetInnerHTML={{ __html: response }} />
+              
             </Box>
         </Box>
     )

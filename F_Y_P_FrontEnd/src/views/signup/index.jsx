@@ -107,7 +107,12 @@ export default function Signup() {
             setPasswordError("");
             setConfirmPasswordError("");
             navigator("/");
+
+            console.log(response)
             localStorage.setItem('_id',response.result._id)
+            localStorage.setItem('name',response.result.fullName)
+            localStorage.setItem('email',response.result.email)
+            localStorage.setItem('phoneNo',response.result.phoneNo)
           } else {
             alert(response.message)
           }

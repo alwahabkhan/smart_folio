@@ -1,39 +1,56 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import TableRow from "./components/tableRow";
 import { useNavigate } from "react-router-dom";
+import baseUrl from "url";
+import appContext from "appState/appContext";
 let tableItemStyle = {
-  fontSize: "12px", fontWeight: "600", width: '20%'
+  fontSize: "12px", fontWeight: "600", width: '25%'
 }
 const Dashboard = () => {
+  const appState = useContext(appContext)
+  const { setLetter } = appState
   const [coverLetters, setCoverLetters] = useState([
     {
-      name: "Wahab",
-      modified: "23/11/2023",
-      created: "18/11/2023",
+      user: "Wahab",
+      updated_at: "23/11/2023",
+      created_at: "18/11/2023",
       strenth: "17",
     },
     {
-      name: "Ameen",
-      modified: "22/11/2023",
-      created: "17/11/2023",
+      user: "Ameen",
+      updated_at: "22/11/2023",
+      created_at: "17/11/2023",
       strenth: "11",
     },
     {
-      name: "Suleman",
-      modified: "21/11/2023",
-      created: "16/11/2023",
+      user: "Suleman",
+      updated_at: "21/11/2023",
+      created_at: "16/11/2023",
       strenth: "19",
     },
     {
-      name: "Hazik",
-      modified: "20/11/2023",
-      created: "15/11/2023",
+      user: "Hazik",
+      updated_at: "20/11/2023",
+      created_at: "15/11/2023",
       strenth: "21",
     },
   ]);
-  const navigator= useNavigate()
+  const navigator = useNavigate()
+  const getData = async () => {
+    await fetch(`${baseUrl}/cover-letter/get?user_id=${localStorage.getItem('_id')}`).then(res => res.json())
+      .then(response => {
+        console.log(response)
+        if (response.status) {
+          setCoverLetters(response.result)
+        }
+      })
+  }
+  useEffect(() => {
+    getData()
+  }, [])
+
   return (
     <Container sx={{ marginTop: "140px" }}>
       <Box
@@ -49,7 +66,7 @@ const Dashboard = () => {
             color: "rgb(55 65 81)",
             borderColor: "rgb(55 65 81)",
           }}
-          onClick={()=>{
+          onClick={() => {
             navigator('/cover-letter')
           }}
         >
@@ -67,7 +84,7 @@ const Dashboard = () => {
             }}
           >
             <Typography sx={tableItemStyle}>
-              NAME
+              user
             </Typography>
             <Typography sx={tableItemStyle}>
               MODIFICATION
@@ -75,10 +92,7 @@ const Dashboard = () => {
             <Typography sx={tableItemStyle}>
               CREATION
             </Typography>
-            <Typography sx={tableItemStyle}>
-              STRENTH
-            </Typography>
-            <Typography sx={{ fontSize: "12px", fontWeight: "600", width: '20%', display: 'flex', justifyContent: 'flex-end' }}>
+            <Typography sx={{ fontSize: "12px", fontWeight: "600", width: '25%', display: 'flex', justifyContent: 'flex-end' }}>
               ACTIONS
             </Typography>
           </Box>
@@ -87,10 +101,25 @@ const Dashboard = () => {
           {coverLetters.map((item, index) => (
             <TableRow
               key={index}
-              name={item.name}
-              modified={item.modified}
-              created={item.created}
-              strenth={item.strenth}
+              name={item.user?.fullName}
+              modified={item.updated_at?.substring(0, 10)}
+              created={item.created_at?.substring(0, 10)}
+              onDelete={async () => {
+                await fetch(`${baseUrl}/cover-letter/delete?_id=${item._id}`, { method: 'DELETE' }).then(res => res.json())
+                  .then(response => {
+                    console.log(response)
+                    alert('Deleted')
+                    getData()
+                  })
+              }}
+              onEdit={() => {
+                setLetter(item.text)
+                navigator(`/letter-view?_id=${item._id}`)
+              }}
+              onClick={() => {
+                setLetter(item.text)
+                navigator(`/letter-view?view=true`)
+              }}
             />
           ))}
         </Box>
